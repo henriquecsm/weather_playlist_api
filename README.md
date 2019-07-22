@@ -8,7 +8,7 @@ Para a geração da documentação para API: foi utilizado o Flasgger que é uma
 Para acessar documentação utilizar o link: http://localhost:5000/apidocs depois que o Flask iniciar o WSGIServer.
 
 Abaixo segue diagrama de organização do código:
-
+```
 weather_playlist_api/
 |-- config/
 |   |
@@ -21,25 +21,22 @@ weather_playlist_api/
 |-- app.py
 |
 `-- run.py
-
+```
 
 Arquitetura utilizada:
+```
 
-                         ------------------------------------------FlaskRestFul process----------------------------------------              
-                        |                                                                                                      |
-                        |                                                                                                      | 
-                        |                                                                                                      |
- ---------------        |         -------------------                  ---------------                 -------------------     |
-|               |       |        |                   |                |               |               |                   |    |                   
-|  API Request  |-------|------->|  OpenWeather API  |--------------->|  Spotify API  |-------------->| Return playlist   |    | 
-|               |       |        |                   |                |               |               |                   |    |
- ---------------        |         -------------------                  ---------------                 -------------------     |
-                        |                                                                                                      | 
-                        |                                                                                                      | 
-                         ------------------------------------------------------------------------------------------------------  
+                        ------------------------------------------FlaskRestFul process--------------------------------                                |                                                                                              |
+                       |                                                                                              |      
+ ---------------       |       -------------------               ---------------              -----------------       |        |               |      |      |                   |             |               |            |                 |      | 
+|  API Request  |------|----->|  OpenWeather API  |------------>|  Spotify API  |----------->| Return playlist |      |  
+|               |      |      |                   |             |               |            |                 |      |
+ ---------------       |       -------------------               ---------------              -----------------       |  
+                       |                                                                                              |  
+                       |                                                                                              |
+                        ----------------------------------------------------------------------------------------------  
 
-
-                                    
+```                                    
 
 Implementation Notes:
 It uses flaskRestful as microservise and flasgger for swagger Rest API documentation.
