@@ -26,15 +26,16 @@ weather_playlist_api/
 Arquitetura utilizada:
 ```
 
-                        ------------------------------------------FlaskRestFul process--------------------------------                                |                                                                                              |
-                       |                                                                                              |      
- ---------------       |       -------------------               ---------------              -----------------       |        |               |      |      |                   |             |               |            |                 |      | 
-|  API Request  |------|----->|  OpenWeather API  |------------>|  Spotify API  |----------->| Return playlist |      |  
-|               |      |      |                   |             |               |            |                 |      |
- ---------------       |       -------------------               ---------------              -----------------       |  
-                       |                                                                                              |  
-                       |                                                                                              |
-                        ----------------------------------------------------------------------------------------------  
+                    ----------------------------FlaskRestFul process----------------------------                                                  |                                                                            |
+                   |                                                                            |      
+ -------------     |     -----------------          -------------         -----------------     |
+|             |    |    |                 |        |             |       |                 |    |
+| API Request |----|--->| OpenWeather API |------->| Spotify API |------>| Return playlist |    |  
+|             |    |    |                 |        |             |       |                 |    |  
+ -------------     |     -----------------          -------------         -----------------     |
+                   |                                                                            |                 
+                   |                                                                            |                 
+                    ----------------------------------------------------------------------------  
 
 ```                                    
 
@@ -45,16 +46,23 @@ Response Class (Status 200)
 RestFul API to get a playlist according to current weather from a specific city.
 
 Example Value:
+```
 {
 "city": "Campinas"
 }
+```
 
 Curl:
+```
 curl -X GET --header 'Accept: application/json' 'http://localhost:5000/playlist/Campinas'
+```
 
 Request URL:
+```
 http://localhost:5000/playlist/Campinas
+```
 
+```
 Response Body:
 {
 "status": "success",
@@ -83,12 +91,16 @@ Response Body:
 "00s Rock Anthems"
 ]
 }
+```
+
 Response Code:
 200
 Response Headers:
+```
 {
 "date": "Mon, 22 Jul 2019 16:02:02 GMT",
 "server": "Werkzeug/0.15.5 Python/3.6.5",
 "content-length": "613",
 "content-type": "application/json"
 }
+```
