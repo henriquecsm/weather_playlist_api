@@ -1,26 +1,37 @@
 from urllib.parse import quote
 from flask_restful import Resource
 import requests
-from flask import jsonify
+from flask import jsonify, request
 from config import config
 
 
 class GetPlaylist(Resource):
 
     def get(self, city):
-
         """
                It returns a playlist according to current weather from a specific city.
                It uses flaskRestful as microservise and flasgger for swagger Rest API documentation.
                ---
                parameters:
+                 - in: header
+                   name: X-OPENWEATHER-APPID
+                   type: string
+                   required: true
+                 - in: header
+                   name: X-SPOTIFY-TOKEN
+                   type: string
+                   required: true
                  - in: path
                    name: city
                    type: string
                    required: true
                responses:
                  200:
-                   description: RestFul API to get a playlist according to current weather from a specific city.
+                   description: Receive Playlist successfully.
+                 401:
+                   description: Invalid API key or Invalid access token or the access token expired.
+                 404:
+                   description: City not found.
                    schema:
                      id: city
                      properties:
@@ -28,10 +39,16 @@ class GetPlaylist(Resource):
                          type: string
                          description: City name
                          example: Campinas
-                """
+        """
+
+        openweather_API_KEY = request.headers.get('X-OPENWEATHER-APPID')
+        spotify_API_KEY = request.headers.get('X-SPOTIFY-TOKEN')
+
+        if not  openweather_API_KEY or not spotify_API_KEY:
+            return {"cod": 404, "message": "headers paramters are missing"}, 404
 
         #Trata o token spotify
-        def request(qstring, spo_token):
+        def handle_token(qstring, spo_token):
 
             bearer = 'Bearer {}'.format(spo_token)
 
@@ -60,7 +77,7 @@ class GetPlaylist(Resource):
             qstring = '{}search?q={}&type=playlist'.format(
                 config.spotify_url, quote(genero))
 
-            resp = request(qstring, spo_token).json()
+            resp = handle_token(qstring, spo_token).json()
 
 
             if 'error' in resp:
@@ -82,12 +99,13 @@ class GetPlaylist(Resource):
             r_str = '{}?units=metric&q={}&appid={}'.format(config.openweather_url, quote(city), appid)
 
             # Requesting the API
-            resp = request(r_str, None)
+            resp = handle_token(r_str, None)
 
             return resp.json()
 
 
-        weather = get_weather(city, config.openweather_API_KEY)
+        weather = get_weather(city, openweather_API_KEY)
+
 
         if weather['cod'] != 200:
             return jsonify(weather)
@@ -100,7 +118,7 @@ class GetPlaylist(Resource):
             return {"cod": 404, "message": "temperatura not found"}, 404
 
 
-        playlist = get_playlists(temperatura, config.spotify_API_KEY)
+        playlist = get_playlists(temperatura, spotify_API_KEY)
 
         if playlist['cod'] == '1':
             playlist = playlist['cont']
@@ -109,9 +127,6 @@ class GetPlaylist(Resource):
             return jsonify(error)
 
         return {"status":'success', "Cidade":city, "Temperatura":temperatura, "Playlist sugerida":playlist}, 200
-
-
-
 
 
 
